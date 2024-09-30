@@ -10,9 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-public class WebApiExRatePaymentService extends PaymentService {
-    @Override
-    BigDecimal getExRate(String currency) throws IOException  {
+public class WebApiExRateProvider {
+    BigDecimal getWebExRate(String currency) throws IOException  {
         /*
          환율 API 호출
          지정된 currency 값을 사용하여 환율 정보를 얻기 위해 외부 API로 GET 요청을 보냄
@@ -31,7 +30,6 @@ public class WebApiExRatePaymentService extends PaymentService {
         */
         ObjectMapper mapper = new ObjectMapper();
         ExRateData data = mapper.readValue(response, ExRateData.class);
-        BigDecimal exRate = data.rates().get("KRW");
-        return exRate;
+        return data.rates().get("KRW");
     }
 }
