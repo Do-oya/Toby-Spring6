@@ -10,8 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-public class WebApiExRateProvider {
-    BigDecimal getWebExRate(String currency) throws IOException  {
+public class WebApiExRateProvider implements ExRateProvider{
+
+    @Override
+    public BigDecimal getExRate(String currency) throws IOException {
         /*
          환율 API 호출
          지정된 currency 값을 사용하여 환율 정보를 얻기 위해 외부 API로 GET 요청을 보냄
