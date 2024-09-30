@@ -13,6 +13,21 @@ import java.util.stream.Collectors;
 
 public class PaymentService {
     public Payment prepare(Long orderId, String currency, BigDecimal foreignCurrencyAmount) throws IOException {
+        BigDecimal exRate = getExRate(currency);
+        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
+        LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
+
+        return Payment.builder()
+                .orderId(orderId)
+                .currency(currency)
+                .foreignCurrencyAmount(foreignCurrencyAmount)
+                .exRate(exRate)
+                .convertedAmount(convertedAmount)
+                .validUntil(validUntil)
+                .build();
+    }
+
+    private BigDecimal getExRate(String currency) throws IOException {
         /*
          환율 API 호출
          지정된 currency 값을 사용하여 환율 정보를 얻기 위해 외부 API로 GET 요청을 보냄
@@ -32,21 +47,7 @@ public class PaymentService {
         ObjectMapper mapper = new ObjectMapper();
         ExRateData data = mapper.readValue(response, ExRateData.class);
         BigDecimal exRate = data.rates().get("KRW");
-        System.out.println(exRate);
-
-        // 금액 계산
-        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
-        // 유효 시간 계산
-        LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
-
-        return Payment.builder()
-                .orderId(orderId)
-                .currency(currency)
-                .foreignCurrencyAmount(foreignCurrencyAmount)
-                .exRate(exRate)
-                .convertedAmount(convertedAmount)
-                .validUntil(validUntil)
-                .build();
+        return exRate;
     }
 
     public static void main(String[] args) throws IOException {
