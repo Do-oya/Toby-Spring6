@@ -7,13 +7,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 public class ObjectFactory {
-/*    @Bean
+    @Bean
     public PaymentService paymentService() {
-        return new PaymentService(exRateProvider());
+        return new PaymentService(cachedExRateProvider());
+    }
+
+    @Bean
+    public ExRateProvider cachedExRateProvider() {
+        return new CachedExRateProvider(exRateProvider());
     }
 
     @Bean
     public ExRateProvider exRateProvider() {
         return new WebApiExRateProvider();
-    }*/
+    }
+
 }
